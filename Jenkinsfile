@@ -5,16 +5,10 @@ pipeline {
 
     stages {
 
-        stage("Checkout") {
-            steps {
-                checkout scm
-            }
-        }
-
         stage("Build Docker Image") {
             steps {
                 echo "Building Docker Image"
-                sh "docker build -t python-app ."
+                sh "docker build -t python-app -f Dockerfile ."
             }
         }
 
@@ -35,13 +29,11 @@ pipeline {
         stage("Run New Container") {
             steps {
                 echo "Running new container"
-                sh """
-                    docker run -d -p 8001:8000 --name python-container python-app
-                """
+                sh "docker run -d -p 8001:8000 --name python-container python-app"
             }
         }
     }
-    
+
     post {
         success {
             echo "Deployment Successful 🚀"
